@@ -49,6 +49,7 @@ public class Generation {
             } else {
                 calculationFormula.getNumbers()[j] = generateRandomNatureNumber(upperLimit);
             }
+            //生成操作符号
             char operator = generateRandomOperator();
             calculationFormula.getOperators()[j - 1] = operator;
             //考虑可能出现 ÷0 的情况
@@ -58,6 +59,21 @@ public class Generation {
                         calculationFormula.getNumbers()[j] = generateRandomFraction(upperLimit);
                     } else {
                         calculationFormula.getNumbers()[j] = generateRandomNatureNumber(upperLimit);
+                    }
+                }
+            }
+            //考虑可能出现 e1-e2 < 0 的情况
+            if ('-' == operator) {
+                while (calculationFormula.getNumbers()[j - 1].getValue() - calculationFormula.getNumbers()[j].getValue() < 0) {
+                    if (generateRandomInt(2) >= 1) {
+                        calculationFormula.getNumbers()[j] = generateRandomFraction(upperLimit);
+                    } else {
+                        calculationFormula.getNumbers()[j] = generateRandomNatureNumber(upperLimit);
+                    }
+                    if (generateRandomInt(2) >= 1) {
+                        calculationFormula.getNumbers()[j - 1] = generateRandomFraction(upperLimit);
+                    } else {
+                        calculationFormula.getNumbers()[j - 1] = generateRandomNatureNumber(upperLimit);
                     }
                 }
             }
@@ -73,7 +89,7 @@ public class Generation {
         int lBracketCounts = generateRandomInt(operatorCounts + 1);
         while (lBracketCounts > 0) {
             int lIndex = generateRandomInt(operatorCounts);
-            int rIndex = generateRandomInt(operatorCounts - lIndex) + lIndex;
+            int rIndex = generateRandomInt(operatorCounts - lIndex) + lIndex + 1;
             if (lIndex == rIndex) {
                 continue;
             }
