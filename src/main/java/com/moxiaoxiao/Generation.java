@@ -1,7 +1,10 @@
 package com.moxiaoxiao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author 墨小小
@@ -60,7 +63,7 @@ public class Generation {
             }
         }
 
-        //todo 括号去重:((1+1)) 和 ((1)) 这俩种都去
+        //todo 括号去重:((1+1))  从最右边的同一位上的多个（ 开始 找匹配的 ），如果）有多个，就同时删减，再递归处理次个（
         //添加左边的括号
         /*
         length = oper + 1;
@@ -75,7 +78,6 @@ public class Generation {
             //有可能随机到同样的index，所以用 += 而不能直接 =
             calculationFormula.getLBrackets()[lIndex] += generateLCounts;
             lBracketCounts -= generateLCounts;
-
             int rBracketCounts = generateLCounts;
             //生成左括号后生成对应个数的右括号
             while (rBracketCounts > 0) {
@@ -84,32 +86,105 @@ public class Generation {
                 int rIndex = generateRandomInt(operatorCounts - lIndex) + 1 + lIndex;
                 calculationFormula.getRBrackets()[rIndex] += generateRCounts;
                 rBracketCounts -= generateRCounts;
-                //除去重复生成的括号
+               /* //除去重复生成的括号
                 if (calculationFormula.getRBrackets()[rIndex] > 1 && calculationFormula.getLBrackets()[lIndex] > 1) {
                     calculationFormula.getLBrackets()[lIndex] -= generateRCounts;
                     calculationFormula.getRBrackets()[rIndex] -= generateRCounts;
-                }
+                }*/
             }
         }
         //优化重复括号和开头末尾括号
-        //开头末尾
+/*        //开头末尾
         if (calculationFormula.getLBrackets()[0] > 0 &&
                 calculationFormula.getRBrackets()[operatorCounts] > 0) {
             int min = Math.min(calculationFormula.getLBrackets()[0], calculationFormula.getRBrackets()[operatorCounts]);
             calculationFormula.getLBrackets()[0] -= min;
             calculationFormula.getRBrackets()[operatorCounts] -= min;
-        }
+        }*/
         //循环遍历左括号，除去(((Number)) + )的情况
         for (int i = 0; i < operatorCounts; i++) {
-            int bracketCounts = calculationFormula.getLBrackets()[i];
-            if (bracketCounts >= calculationFormula.getRBrackets()[i]) {
-                int num = Math.min(bracketCounts, calculationFormula.getRBrackets()[i]);
+            if (calculationFormula.getRBrackets()[i] > 0) {
+                int num = Math.min(calculationFormula.getLBrackets()[i], calculationFormula.getRBrackets()[i]);
                 calculationFormula.getLBrackets()[i] -= num;
                 calculationFormula.getRBrackets()[i] -= num;
             }
         }
+        //去除远距离的重复的括号
+        System.out.println("in");
+        System.out.println("L：\t\t" + Arrays.toString(calculationFormula.getLBrackets()));
+        System.out.println("R：\t\t" + Arrays.toString(calculationFormula.getRBrackets()));
+        Set<String> recordSet = new TreeSet<>();
+        for (int i = calculationFormula.getLBrackets().length - 2; i >= 0; i--) {
+            if (calculationFormula.getLBrackets()[i] > 0) {
+                for (int j = i + 1; j < calculationFormula.getRBrackets().length; j++) {
+                    if (calculationFormula.getRBrackets()[j] > 0) {
+                        //做记录，并对应减少
+                        int min = Math.min(calculationFormula.getLBrackets()[i], calculationFormula.getRBrackets()[j]);
+                        calculationFormula.getLBrackets()[i] -= min;
+                        calculationFormula.getRBrackets()[j] -= min;
+                        //左括号下标:右括号下标
+                        recordSet.add(i + ":" + j);
+                        System.out.println(i + ":" + j);
+                        System.out.println("del L：\t\t" + Arrays.toString(calculationFormula.getLBrackets()));
+                        System.out.println("del R：\t\t" + Arrays.toString(calculationFormula.getRBrackets()));
+                    }
+                    if (calculationFormula.getLBrackets()[i] == 0) {
+                        break;
+                    }
+                }
+            }
+        }
+        //去掉开头末尾
+        recordSet.remove("0:" + operatorCounts);
+        System.out.println("recordSet:" + recordSet);
+        for (String temp : recordSet) {
+            String[] index = temp.split(":");
+            calculationFormula.getLBrackets()[Integer.parseInt(index[0])]++;
+            calculationFormula.getRBrackets()[Integer.parseInt(index[1])]++;
+            System.out.println("add L：\t\t" + Arrays.toString(calculationFormula.getLBrackets()));
+            System.out.println("add R：\t\t" + Arrays.toString(calculationFormula.getRBrackets()));
+        }
+        System.out.println("out");
+        //遍历左括号，从右端开始
+/*        A:
+        for (int i = calculationFormula.getLBrackets().length - 2; i >= 0; i--) {
+            //忽略只有1个或没有括号的情况
+            if (calculationFormula.getLBrackets()[i] <= 1) {
+                continue;
+            }
+            int ableCounts = calculationFormula.getLBrackets()[i] - 1;
+            int ignoreCounts = countBrackets(calculationFormula.getLBrackets(), i, false);
+
+            int ignoreCountSum = 0;
+            B:
+            for (int j = i; j < calculationFormula.getRBrackets().length; j++) {
+                //忽略的个数还没到，继续加
+                if (ignoreCountSum < ignoreCounts) {//to do 考虑需要 <= 还是 <
+                    ignoreCountSum += calculationFormula.getRBrackets()[j];
+                    continue;
+                }
+                //忽略的个数到了，开始考虑减少
+                //匹配单个或没有括号的情况
+                if (calculationFormula.getRBrackets()[j] <= 1) {
+                    ableCounts -= calculationFormula.getRBrackets()[j];
+                    continue;
+                }
+                if (ableCounts < ignoreCountSum - ignoreCounts) {// 绝对能有留1个多的括号，因为是<
+                    //允许的个数比较少
+                    calculationFormula.getRBrackets()[j] -= ableCounts;
+                    break;
+                } else {
+                    //允许的个数比较多
+                    int difference = ignoreCountSum - ignoreCounts -1;
+
+                    ignoreCountSum +;
 
 
+                    continue ;
+                }
+            }
+        }*/
+        System.out.println("formula =============================== " + calculationFormula);
         return calculationFormula;
     }
 

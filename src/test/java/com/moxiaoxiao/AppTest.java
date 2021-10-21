@@ -4,7 +4,12 @@ import static com.moxiaoxiao.Generation.*;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class AppTest {
 
@@ -14,8 +19,9 @@ public class AppTest {
         /*
         0×((4×0/3))÷3
          */
-        for (CalculationFormula formula : Generation.generateQuestionList(100, 10, 5)) {
-            System.out.println(formula);
+        List<CalculationFormula> calculationFormulaList = Generation.generateQuestionList(100, 10, 5);
+        for (CalculationFormula formula : calculationFormulaList) {
+            System.out.println("formula =============================== " + formula);
         }
         System.out.println("Hello");
     }
@@ -68,8 +74,8 @@ public class AppTest {
             }
             int lBracketCounts = generateRandomInt(operatorCounts + 1);
             while (lBracketCounts > 0) {
-                int generateLCounts = generateRandomInt(lBracketCounts) + 1;
                 int lIndex = generateRandomInt(operatorCounts);
+                int generateLCounts = generateRandomInt(lIndex) + 1;
                 //有可能随机到同样的index，所以用 += 而不能直接 =
                 calculationFormula.getLBrackets()[lIndex] += generateLCounts;
                 lBracketCounts -= generateLCounts;
@@ -94,7 +100,6 @@ public class AppTest {
                             左括号:		[0, 0, 2, 0, 1, 0]
                             右括号：		[0, 0, 0, 0, 1, 2]
                         out
-                        这种无法处理。还是通过处理数组的方式处理吧
                      */
                     if (calculationFormula.getRBrackets()[rIndex] > 1 && calculationFormula.getLBrackets()[lIndex] > 1) {
                         int num = Math.max(calculationFormula.getRBrackets()[rIndex] - 1, 1);
@@ -124,5 +129,15 @@ public class AppTest {
             }
             System.out.println("out");
         }
+    }
+
+    @Test
+    public void testList() {
+        Set<String> ww = new TreeSet<>();
+        ww.add("123");
+        System.out.println(ww);
+        ww.add("12");
+        System.out.println(ww);
+
     }
 }
