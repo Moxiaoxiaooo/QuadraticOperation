@@ -19,9 +19,9 @@ public class AppTest {
         /*
         0×((4×0/3))÷3
          */
-        List<CalculationFormula> calculationFormulaList = Generation.generateQuestionList(100, 10, 5);
+        List<CalculationFormula> calculationFormulaList = Generation.generateQuestionList(100, 10, 3);
         for (CalculationFormula formula : calculationFormulaList) {
-            System.out.println("formula =============================== " + formula);
+            System.out.println(formula);
         }
         System.out.println("Hello");
     }
