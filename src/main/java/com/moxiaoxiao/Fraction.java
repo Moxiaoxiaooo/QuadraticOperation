@@ -35,4 +35,34 @@ public class Fraction {
     public double getValue() {
         return numerator / denominator;
     }
+
+    /**
+     * 优化分数
+     */
+    public void optimize() {
+        //考虑 14/7  8/6 5/5 这种需要除公约数的情况
+        if (this.getNumerator() >= this.getDenominator()) {
+            int commonDivisor = getCommonDivisor(this.getNumerator(), this.getDenominator());
+            this.setDenominator(this.getDenominator() / commonDivisor);
+            this.setNumerator(this.getNumerator() / commonDivisor);
+        }
+    }
+
+
+    /**
+     * 通过辗转相除法获取公约数
+     *
+     * @param a
+     * @param b
+     * @return 公约数
+     */
+    public static int getCommonDivisor(int a, int b) {
+        while (b != 0) {
+            int remainder = a % b;
+            a = b;
+            b = remainder;
+        }
+        return a;
+    }
+
 }

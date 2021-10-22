@@ -1,5 +1,6 @@
 package com.moxiaoxiao;
 
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -116,5 +117,93 @@ public class Calculation {
             }
         }
         throw new Exception("非 +-×÷ 表达式，请确保符号正确");
+    }
+
+
+    /**
+     * 计算一个分数表达式
+     *
+     * @param formula 要被计算的式子
+     * @return 计算后的分数值
+     */
+    public static Fraction calculateFormula(CalculationFormula formula) {
+        //初始化俩个栈，符号栈和算术栈
+        Stack<Character> operatorStack = new Stack<>();
+        Stack<Object> formulaStack = new Stack<>();
+        //通过共用的下标，轮流insert进入stack
+        for (int i = 0; i < formula.getNumbers().length; i++) {
+            //1 + （ （ 2 + 3 ） * 4 ） - 5
+            formulaStack.push(formula.getNumbers()[i]);
+            char operator = formula.getOperators()[i];
+            while (true) {
+                if (operatorStack.empty() || operatorStack.peek() == '(') {
+                    operatorStack.push(operator);
+                    break;
+                } else if ((operator == '×' || operator == '*' || operator == '÷') && (operatorStack.peek() == '+' || operatorStack.peek() == '-')) {
+                    operatorStack.push(operator);
+                    break;
+                } else {
+                    formulaStack.push(operatorStack.pop());
+                }
+            }
+            for (int j = 0; j < formula.getLBrackets()[i]; j++) {
+                operatorStack.push('(');
+            }
+
+        }
+        return null;
+    }
+
+
+    /**
+     * 计算两个分数
+     *
+     * @param a1       左边的分数
+     * @param a2       右边的分数
+     * @param operator 操作符号
+     * @return 一个分数值
+     */
+    public static Fraction calculateFraction(Fraction a1, Fraction a2, char operator) {
+        Fraction result = new Fraction();
+        switch (operator) {
+            case '+': {
+                //分母相同，分子直接相加
+                if (a1.getDenominator() == a2.getDenominator()) {
+                    result.setDenominator(a1.getDenominator());
+                    result.setNumerator(a1.getNumerator() + a2.getNumerator());
+                    result.optimize();
+                } else {
+                    result.setDenominator(a1.getDenominator() * a2.getDenominator());
+                    result.setNumerator(a1.getNumerator() * a2.getDenominator() + a2.getNumerator() * a1.getDenominator());
+                    result.optimize();
+                }
+            }
+            case '-': {
+                //分母相同，分子直接相减
+                if (a1.getDenominator() == a2.getDenominator()) {
+                    result.setDenominator(a1.getDenominator());
+                    result.setNumerator(a1.getNumerator() - a2.getNumerator());
+                    result.optimize();
+                } else {
+                    result.setDenominator(a1.getDenominator() * a2.getDenominator());
+                    result.setNumerator(a1.getNumerator() * a2.getDenominator() - a2.getNumerator() * a1.getDenominator());
+                    result.optimize();
+                }
+            }
+            case '×':
+            case '*': {
+                //分子*分子 分母*分母
+                result.setNumerator(a1.getNumerator() * a2.getNumerator());
+                result.setDenominator(a1.getDenominator() * a2.getDenominator());
+                result.optimize();
+            }
+            case '÷': {
+                //分子=a1分子*a2分母 分母=a1分母*a2分子
+                result.setNumerator(a1.getNumerator() * a2.getDenominator());
+                result.setDenominator(a1.getDenominator() * a2.getNumerator());
+                result.optimize();
+            }
+        }
+        return result;
     }
 }

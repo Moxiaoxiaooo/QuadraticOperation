@@ -174,30 +174,6 @@ public class Generation {
 
 
     /**
-     * 计算某个方向上的括号数量
-     *
-     * @param index        开始的下标
-     * @param bracketArray 括号数组
-     * @param startInRight 是否是从右向左数
-     * @return
-     */
-    public static int countBrackets(int[] bracketArray, int index, boolean startInRight) {
-        int result = 0;
-        if (startInRight) {
-            //从右边开始
-            for (int i = index; i >= 0; i--) {
-                result += bracketArray[i];
-            }
-        } else {
-            //从左边开始
-            for (int i = index; i < bracketArray.length; i++) {
-                result += bracketArray[i];
-            }
-        }
-        return result;
-    }
-
-    /**
      * 生成一个分母可以为1的分数
      *
      * @param upperLimit 上限
@@ -235,5 +211,6 @@ public class Generation {
     public static int generateRandomInt(int upperLimit) {
         return (int) (Math.random() * upperLimit * 100 % upperLimit);
     }
+
 
 }

@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 import java.util.TreeSet;
 
 public class AppTest {
@@ -139,5 +140,20 @@ public class AppTest {
         ww.add("12");
         System.out.println(ww);
 
+        Stack<Integer> stack = new Stack<>();
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
+        System.out.println(stack.pop());
+        System.out.println(stack.pop());
+        System.out.println(stack.pop());
+    }
+
+    @Test
+    public void testStringBuilder() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("0123");
+        stringBuilder.insert(1, "www");
+        System.out.println(stringBuilder.toString());
     }
 }
