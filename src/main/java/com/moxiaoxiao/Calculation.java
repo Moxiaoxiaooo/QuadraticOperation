@@ -1,5 +1,8 @@
 package com.moxiaoxiao;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -133,7 +136,9 @@ public class Calculation {
         //通过共用的下标，轮流insert进入stack
         for (int i = 0; i < formula.getNumbers().length; i++) {
             //1 + （ （ 2 + 3 ） * 4 ） - 5
+            //处理数字
             formulaStack.push(formula.getNumbers()[i]);
+            //处理运算符
             char operator = formula.getOperators()[i];
             while (true) {
                 if (operatorStack.empty() || operatorStack.peek() == '(') {
@@ -146,11 +151,32 @@ public class Calculation {
                     formulaStack.push(operatorStack.pop());
                 }
             }
+            //处理左括号
             for (int j = 0; j < formula.getLBrackets()[i]; j++) {
                 operatorStack.push('(');
             }
-
+            //处理右括号
+            for (int j = 0; j < formula.getRBrackets()[i]; j++) {
+                while (true) {
+                    char temp = operatorStack.pop();
+                    if (temp == '(') {
+                        break;
+                    }
+                    formulaStack.push(temp);
+                }
+            }
         }
+        //处理剩下的运算符号
+        while (!operatorStack.empty()) {
+            formulaStack.push(operatorStack.pop());
+        }
+        //将运算式栈转为一般链表，并存入List以计算
+        List<Object> formulaList = new LinkedList<>();
+        while (!formulaStack.empty()) {
+            formulaList.add(formulaStack.pop());
+        }
+
+
         return null;
     }
 
