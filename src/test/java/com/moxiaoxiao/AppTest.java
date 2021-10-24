@@ -4,9 +4,7 @@ import static com.moxiaoxiao.Generation.*;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
@@ -17,11 +15,13 @@ public class AppTest {
 
     @Test
     public void testGenerateQuestion() {
-        /*
-        0×((4×0/3))÷3
-         */
-        List<CalculationFormula> calculationFormulaList = Generation.generateQuestionList(100, 10, 3);
+        List<CalculationFormula> calculationFormulaList = Generation.generateQuestionList(100, 10, 5);
         for (CalculationFormula formula : calculationFormulaList) {
+            /*
+            3+3/5)+(6÷4
+(5/4+8/5×7)-1/2)×(8-4
+todo 生成计算式还是有括号问题
+             */
             System.out.println(formula);
         }
         System.out.println("Hello");
@@ -155,5 +155,12 @@ public class AppTest {
         stringBuilder.append("0123");
         stringBuilder.insert(1, "www");
         System.out.println(stringBuilder.toString());
+    }
+
+    @Test
+    public void testCalculation() {
+        CalculationFormula fraction = generateRandomCalculationFormula(10, 5);
+        System.out.println(fraction);
+        System.out.println(Calculation.calculateFormula(fraction));
     }
 }

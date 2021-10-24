@@ -10,7 +10,7 @@ import lombok.Setter;
  */
 @Setter
 @Getter
-public class Fraction {
+public class Fraction implements Comparable {
 
     /**
      * 分子
@@ -24,6 +24,7 @@ public class Fraction {
 
     @Override
     public String toString() {
+        this.optimize();
         return numerator + (denominator == 1 ? "" : ("/" + denominator));
     }
 
@@ -65,4 +66,8 @@ public class Fraction {
         return a;
     }
 
+    @Override
+    public int compareTo(Object o) {
+        return this.toString().compareTo(o.toString());
+    }
 }

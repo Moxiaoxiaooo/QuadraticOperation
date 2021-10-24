@@ -139,17 +139,14 @@ public class Generation {
                 }
             }
         }
+        //9/4×6/3)+(0×0/6
         //去掉开头末尾
-        recordSet.remove("0:" + operatorCounts);
-        System.out.println("recordSet:" + recordSet);
+//        recordSet.remove("0:" + operatorCounts);
         for (String temp : recordSet) {
             String[] index = temp.split(":");
             calculationFormula.getLBrackets()[Integer.parseInt(index[0])]++;
             calculationFormula.getRBrackets()[Integer.parseInt(index[1])]++;
-            System.out.println("add L：\t\t" + Arrays.toString(calculationFormula.getLBrackets()));
-            System.out.println("add R：\t\t" + Arrays.toString(calculationFormula.getRBrackets()));
         }
-        System.out.println("out");
 
         return calculationFormula;
     }

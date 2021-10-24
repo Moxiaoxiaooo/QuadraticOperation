@@ -1,6 +1,9 @@
 package com.moxiaoxiao;
 
+import javafx.print.Collation;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -130,31 +133,21 @@ public class Calculation {
      * @return 计算后的分数值
      */
     public static Fraction calculateFormula(CalculationFormula formula) {
+        Fraction result = new Fraction();
         //初始化俩个栈，符号栈和算术栈
         Stack<Character> operatorStack = new Stack<>();
         Stack<Object> formulaStack = new Stack<>();
         //通过共用的下标，轮流insert进入stack
         for (int i = 0; i < formula.getNumbers().length; i++) {
             //1 + （ （ 2 + 3 ） * 4 ） - 5
-            //处理数字
-            formulaStack.push(formula.getNumbers()[i]);
-            //处理运算符
-            char operator = formula.getOperators()[i];
-            while (true) {
-                if (operatorStack.empty() || operatorStack.peek() == '(') {
-                    operatorStack.push(operator);
-                    break;
-                } else if ((operator == '×' || operator == '*' || operator == '÷') && (operatorStack.peek() == '+' || operatorStack.peek() == '-')) {
-                    operatorStack.push(operator);
-                    break;
-                } else {
-                    formulaStack.push(operatorStack.pop());
-                }
-            }
             //处理左括号
             for (int j = 0; j < formula.getLBrackets()[i]; j++) {
                 operatorStack.push('(');
             }
+            System.out.println("处理左括号：" + operatorStack);
+            System.out.println("处理左括号：" + formulaStack);
+            //处理数字
+            formulaStack.push(formula.getNumbers()[i]);
             //处理右括号
             for (int j = 0; j < formula.getRBrackets()[i]; j++) {
                 while (true) {
@@ -165,6 +158,26 @@ public class Calculation {
                     formulaStack.push(temp);
                 }
             }
+            //处理运算符
+            if (i < formula.getNumbers().length - 1) {
+                char operator = formula.getOperators()[i];
+                while (true) {
+                    if (operatorStack.empty() || operatorStack.peek() == '(') {
+                        operatorStack.push(operator);
+                        break;
+                    } else if ((operator == '×' || operator == '*' || operator == '÷') && (operatorStack.peek() == '+' || operatorStack.peek() == '-')) {
+                        operatorStack.push(operator);
+                        break;
+                    } else {
+                        formulaStack.push(operatorStack.pop());
+                    }
+                }
+            }
+            System.out.println("处理运算符：" + operatorStack);
+            System.out.println("处理运算符：" + formulaStack);
+
+            System.out.println("处理右括号：" + operatorStack);
+            System.out.println("处理右括号：" + formulaStack);
         }
         //处理剩下的运算符号
         while (!operatorStack.empty()) {
@@ -175,9 +188,24 @@ public class Calculation {
         while (!formulaStack.empty()) {
             formulaList.add(formulaStack.pop());
         }
-
-
-        return null;
+        Collections.reverse(formulaList);
+        System.out.println(formulaList);
+        //用一个栈零时存数字
+        Stack<Fraction> fractionStack = new Stack<>();
+        for (Object o : formulaList) {
+            if (o instanceof Fraction) {
+                //是个数字
+                fractionStack.push((Fraction) o);
+            } else if (o instanceof Character) {
+                //是个计算符号
+                Fraction num2 = fractionStack.pop();
+                Fraction num1 = fractionStack.pop();
+                Fraction num3 = calculateFraction(num1, num2, (char) o);
+                fractionStack.push(num3);
+                System.out.println(num3);
+            }
+        }
+        return fractionStack.pop();
     }
 
 
@@ -197,39 +225,38 @@ public class Calculation {
                 if (a1.getDenominator() == a2.getDenominator()) {
                     result.setDenominator(a1.getDenominator());
                     result.setNumerator(a1.getNumerator() + a2.getNumerator());
-                    result.optimize();
                 } else {
                     result.setDenominator(a1.getDenominator() * a2.getDenominator());
                     result.setNumerator(a1.getNumerator() * a2.getDenominator() + a2.getNumerator() * a1.getDenominator());
-                    result.optimize();
                 }
+                break;
             }
             case '-': {
                 //分母相同，分子直接相减
                 if (a1.getDenominator() == a2.getDenominator()) {
                     result.setDenominator(a1.getDenominator());
                     result.setNumerator(a1.getNumerator() - a2.getNumerator());
-                    result.optimize();
                 } else {
                     result.setDenominator(a1.getDenominator() * a2.getDenominator());
                     result.setNumerator(a1.getNumerator() * a2.getDenominator() - a2.getNumerator() * a1.getDenominator());
-                    result.optimize();
                 }
+                break;
             }
             case '×':
             case '*': {
                 //分子*分子 分母*分母
                 result.setNumerator(a1.getNumerator() * a2.getNumerator());
                 result.setDenominator(a1.getDenominator() * a2.getDenominator());
-                result.optimize();
+                break;
             }
             case '÷': {
                 //分子=a1分子*a2分母 分母=a1分母*a2分子
                 result.setNumerator(a1.getNumerator() * a2.getDenominator());
                 result.setDenominator(a1.getDenominator() * a2.getNumerator());
-                result.optimize();
+                break;
             }
         }
+        result.optimize();
         return result;
     }
 }
