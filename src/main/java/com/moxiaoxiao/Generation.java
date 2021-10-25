@@ -64,7 +64,7 @@ public class Generation {
             }
             //考虑可能出现 e1-e2 < 0 的情况
             if ('-' == operator) {
-                while (calculationFormula.getNumbers()[j - 1].getValue() - calculationFormula.getNumbers()[j].getValue() < 0) {
+                while (calculationFormula.getNumbers()[j - 1].getValue() - calculationFormula.getNumbers()[j].getValue() <= 0) {
                     if (generateRandomInt(2) >= 1) {
                         calculationFormula.getNumbers()[j] = generateRandomFraction(upperLimit);
                     } else {
@@ -74,6 +74,16 @@ public class Generation {
                         calculationFormula.getNumbers()[j - 1] = generateRandomFraction(upperLimit);
                     } else {
                         calculationFormula.getNumbers()[j - 1] = generateRandomNatureNumber(upperLimit);
+                    }
+                }
+            }
+            //除去×0的情况
+            if ('×' == operator) {
+                while (calculationFormula.getNumbers()[j].getValue() == 0) {
+                    if (generateRandomInt(2) >= 1) {
+                        calculationFormula.getNumbers()[j] = generateRandomFraction(upperLimit);
+                    } else {
+                        calculationFormula.getNumbers()[j] = generateRandomNatureNumber(upperLimit);
                     }
                 }
             }
@@ -139,7 +149,6 @@ public class Generation {
                 }
             }
         }
-        //9/4×6/3)+(0×0/6
         //去掉开头末尾
         recordSet.remove("0:" + operatorCounts);
         for (String temp : recordSet) {

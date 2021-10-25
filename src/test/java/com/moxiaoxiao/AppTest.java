@@ -4,6 +4,7 @@ import static com.moxiaoxiao.Generation.*;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -15,13 +16,8 @@ public class AppTest {
 
     @Test
     public void testGenerateQuestion() {
-        List<CalculationFormula> calculationFormulaList = Generation.generateQuestionList(100, 10, 5);
+        List<CalculationFormula> calculationFormulaList = Generation.generateQuestionList(10000, 10, 3);
         for (CalculationFormula formula : calculationFormulaList) {
-            /*
-            3+3/5)+(6÷4
-            (5/4+8/5×7)-1/2)×(8-4
-                todo 生成计算式还是有括号问题
-             */
             System.out.println(formula);
         }
         System.out.println("Hello");
@@ -139,6 +135,15 @@ public class AppTest {
         System.out.println(stack.pop());
         System.out.println(stack.pop());
         System.out.println(stack.pop());
+
+        List<String> list = new ArrayList<>();
+        list.add("aaa");//0
+        list.add("bbb");//1
+        list.add("ccc");//2
+        System.out.println(list.get(0));
+        System.out.println(list.get(1));
+        System.out.println(list.get(2));
+        System.out.println(list.get(0));
     }
 
     @Test
@@ -157,14 +162,26 @@ public class AppTest {
     }
 
     @Test
+    public void testMultCalculation() {
+        List<CalculationFormula> calculationFormulaList = Generation.generateQuestionList(10000, 10, 3);
+        for (CalculationFormula formula : calculationFormulaList) {
+            System.out.println(formula);
+            System.out.println("ans = " + Calculation.calculateFormula(formula));
+        }
+        System.out.println("Hello");
+    }
+
+    @Test
     public void testCommonDivider() {
         System.out.println(Fraction.getCommonDivisor(4, 5));
+        System.out.println(8 / 5);
     }
 
     @Test
     public void testCompareTo() {
 
-        //todo 通过比较CF的toString来比较式子是否重复
+        //todo
+
 
     }
 
