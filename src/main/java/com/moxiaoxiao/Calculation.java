@@ -130,9 +130,9 @@ public class Calculation {
      * 计算一个分数表达式
      *
      * @param formula 要被计算的式子
-     * @return 计算后的分数值
+     * @return 计算后的分数值和计算过程
      */
-    public static Fraction calculateFormula(CalculationFormula formula) {
+    public static CalculationProcessAndAns calculateFormula(CalculationFormula formula) throws ByZeroException {
         //初始化俩个栈，符号栈和算术栈
         Stack<Character> operatorStack = new Stack<>();
         Stack<Object> formulaStack = new Stack<>();
@@ -183,19 +183,42 @@ public class Calculation {
         Collections.reverse(formulaList);
         //用一个栈零时存数字
         Stack<Fraction> fractionStack = new Stack<>();
+        //用字符串拼接计算过程
+        StringBuilder calculationProcess = new StringBuilder();
         for (Object o : formulaList) {
             if (o instanceof Fraction) {
                 //是个数字
                 fractionStack.push((Fraction) o);
             } else if (o instanceof Character) {
-                //是个计算符号
+                //是个计算符号  查重要在这里处理
                 Fraction num2 = fractionStack.pop();
                 Fraction num1 = fractionStack.pop();
                 Fraction num3 = calculateFraction(num1, num2, (char) o);
                 fractionStack.push(num3);
+                switch ((char) o) {
+                    case '+':
+                    case '*':
+                    case '×': {
+                        if (num1.getValue() < num2.getValue()) {
+                            calculationProcess.append(num1).append((char) o).append(num2).append(" ");
+                        } else {
+                            calculationProcess.append(num2).append((char) o).append(num1).append(" ");
+                        }
+                        break;
+                    }
+                    case '-':
+                    case '÷': {
+                        calculationProcess.append(num1).append((char) o).append(num2).append(" ");
+                        break;
+                    }
+                }
             }
         }
-        return fractionStack.pop().optimize();
+        CalculationProcessAndAns result = new CalculationProcessAndAns();
+        result.setAns(fractionStack.pop().optimize());
+        result.setProcess(calculationProcess.toString());
+        //把计算过程和答案一起返回，方便查重
+        return result;
     }
 
 
@@ -207,7 +230,7 @@ public class Calculation {
      * @param operator 操作符号
      * @return 一个分数值
      */
-    public static Fraction calculateFraction(Fraction a1, Fraction a2, char operator) {
+    public static Fraction calculateFraction(Fraction a1, Fraction a2, char operator) throws ByZeroException {
         Fraction result = new Fraction();
         switch (operator) {
             case '+': {
@@ -240,6 +263,10 @@ public class Calculation {
                 break;
             }
             case '÷': {
+                //如果出现除以0的情况
+                if (a2.getValue() == 0) {
+                    throw new ByZeroException("出现除数为0,请确保计算式正确！");
+                }
                 //分子=a1分子*a2分母 分母=a1分母*a2分子
                 result.setNumerator(a1.getNumerator() * a2.getDenominator());
                 result.setDenominator(a1.getDenominator() * a2.getNumerator());

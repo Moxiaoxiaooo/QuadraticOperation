@@ -14,14 +14,14 @@ import java.util.TreeSet;
 public class AppTest {
 
 
-    @Test
+/*    @Test
     public void testGenerateQuestion() {
-        List<CalculationFormula> calculationFormulaList = Generation.generateQuestionList(10000, 10, 3);
-        for (CalculationFormula formula : calculationFormulaList) {
-            System.out.println(formula);
+        List<FormulaAndAns> calculationFormulaList = Generation.generateQuestionList(10000, 10, 3);
+        for (FormulaAndAns temp : calculationFormulaList) {
+            System.out.println(temp);
         }
         System.out.println("Hello");
-    }
+    }*/
 
     @Test
     public void test() {
@@ -155,7 +155,7 @@ public class AppTest {
     }
 
     @Test
-    public void testCalculation() {
+    public void testCalculation() throws ByZeroException {
         CalculationFormula fraction = generateRandomCalculationFormula(10, 5);
         System.out.println(fraction);
         System.out.println("ans = " + Calculation.calculateFormula(fraction));
@@ -163,10 +163,9 @@ public class AppTest {
 
     @Test
     public void testMultCalculation() {
-        List<CalculationFormula> calculationFormulaList = Generation.generateQuestionList(10000, 10, 3);
-        for (CalculationFormula formula : calculationFormulaList) {
+        List<FormulaAndAns> calculationFormulaList = Generation.generateQuestionList(10000, 10, 3);
+        for (FormulaAndAns formula : calculationFormulaList) {
             System.out.println(formula);
-            System.out.println("ans = " + Calculation.calculateFormula(formula));
         }
         System.out.println("Hello");
     }
@@ -179,7 +178,6 @@ public class AppTest {
 
     @Test
     public void testCompareTo() {
-
         //todo
 
 

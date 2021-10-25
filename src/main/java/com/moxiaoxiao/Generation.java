@@ -2,6 +2,7 @@ package com.moxiaoxiao;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -19,12 +20,34 @@ public class Generation {
      * @param operatorCounts 符号个数
      * @return
      */
-    public static List<CalculationFormula> generateQuestionList(int size, int upperLimit, int operatorCounts) {
-        List<CalculationFormula> calculationFormulaList = new ArrayList<>();
+    public static List<FormulaAndAns> generateQuestionList(int size, int upperLimit, int operatorCounts) {
+        List<FormulaAndAns> formulaAndAnsList = new ArrayList<>();
+        Set<String> processSet = new HashSet<>();
         for (int i = 0; i < size; i++) {
-            calculationFormulaList.add(generateRandomCalculationFormula(upperLimit, operatorCounts));
+            FormulaAndAns temp = new FormulaAndAns();
+            CalculationFormula formula = null;
+            try {
+                formula = generateRandomCalculationFormula(upperLimit, operatorCounts);
+                CalculationProcessAndAns processAndAns = Calculation.calculateFormula(formula);
+                Fraction ans = processAndAns.getAns();
+                String process = processAndAns.getProcess();
+                if (processSet.contains(process)) {
+                    //重复式子，放弃并重新生成
+                    i--;
+                    continue;
+                } else {
+                    processSet.add(process);
+                }
+                temp.setFormula(formula);
+                temp.setAns(ans);
+            } catch (ByZeroException e) {
+                //出现÷0 放弃，并重新生成
+                i--;
+                continue;
+            }
+            formulaAndAnsList.add(temp);
         }
-        return calculationFormulaList;
+        return formulaAndAnsList;
     }
 
 
