@@ -40,13 +40,14 @@ public class Fraction implements Comparable {
     /**
      * 优化分数
      */
-    public void optimize() {
-        //考虑 14/7  8/6 5/5 这种需要除公约数的情况
+    public Fraction optimize() {
+        //考虑 14/7  8/6 5/5 4/6 这种需要除公约数的情况
         if (this.getNumerator() >= this.getDenominator()) {
             int commonDivisor = getCommonDivisor(this.getNumerator(), this.getDenominator());
             this.setDenominator(this.getDenominator() / commonDivisor);
             this.setNumerator(this.getNumerator() / commonDivisor);
         }
+        return this;
     }
 
 

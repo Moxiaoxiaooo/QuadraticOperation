@@ -133,7 +133,6 @@ public class Calculation {
      * @return 计算后的分数值
      */
     public static Fraction calculateFormula(CalculationFormula formula) {
-        Fraction result = new Fraction();
         //初始化俩个栈，符号栈和算术栈
         Stack<Character> operatorStack = new Stack<>();
         Stack<Object> formulaStack = new Stack<>();
@@ -144,8 +143,6 @@ public class Calculation {
             for (int j = 0; j < formula.getLBrackets()[i]; j++) {
                 operatorStack.push('(');
             }
-            System.out.println("处理左括号：" + operatorStack);
-            System.out.println("处理左括号：" + formulaStack);
             //处理数字
             formulaStack.push(formula.getNumbers()[i]);
             //处理右括号
@@ -173,11 +170,6 @@ public class Calculation {
                     }
                 }
             }
-            System.out.println("处理运算符：" + operatorStack);
-            System.out.println("处理运算符：" + formulaStack);
-
-            System.out.println("处理右括号：" + operatorStack);
-            System.out.println("处理右括号：" + formulaStack);
         }
         //处理剩下的运算符号
         while (!operatorStack.empty()) {
@@ -189,7 +181,6 @@ public class Calculation {
             formulaList.add(formulaStack.pop());
         }
         Collections.reverse(formulaList);
-        System.out.println(formulaList);
         //用一个栈零时存数字
         Stack<Fraction> fractionStack = new Stack<>();
         for (Object o : formulaList) {
@@ -202,10 +193,9 @@ public class Calculation {
                 Fraction num1 = fractionStack.pop();
                 Fraction num3 = calculateFraction(num1, num2, (char) o);
                 fractionStack.push(num3);
-                System.out.println(num3);
             }
         }
-        return fractionStack.pop();
+        return fractionStack.pop().optimize();
     }
 
 

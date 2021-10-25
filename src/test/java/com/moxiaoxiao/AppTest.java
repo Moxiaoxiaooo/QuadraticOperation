@@ -19,8 +19,8 @@ public class AppTest {
         for (CalculationFormula formula : calculationFormulaList) {
             /*
             3+3/5)+(6÷4
-(5/4+8/5×7)-1/2)×(8-4
-todo 生成计算式还是有括号问题
+            (5/4+8/5×7)-1/2)×(8-4
+                todo 生成计算式还是有括号问题
              */
             System.out.println(formula);
         }
@@ -34,7 +34,7 @@ todo 生成计算式还是有括号问题
         System.out.println(b);
     }
 
-    @Test
+    /*@Test
     public void testGenerateBrackets() {
         int operatorCounts = 5;
         int upperLimit = 10;
@@ -92,16 +92,8 @@ todo 生成计算式还是有括号问题
                     rBracketCounts -= generateRCounts;
                     System.out.println("右括号：\t\t" + Arrays.toString(calculationFormula.getRBrackets()));
                     //除去重复生成的括号
-                    /*
-                    todo
-                         in
-                            左括号:		[0, 0, 2, 0, 0, 0]
-                            右括号：		[0, 0, 0, 0, 1, 0]
-                            右括号：		[0, 0, 0, 0, 1, 1]
-                            左括号:		[0, 0, 2, 0, 1, 0]
-                            右括号：		[0, 0, 0, 0, 1, 2]
-                        out
-                     */
+
+
                     if (calculationFormula.getRBrackets()[rIndex] > 1 && calculationFormula.getLBrackets()[lIndex] > 1) {
                         int num = Math.max(calculationFormula.getRBrackets()[rIndex] - 1, 1);
                         calculationFormula.getLBrackets()[lIndex] -= num;
@@ -131,7 +123,7 @@ todo 生成计算式还是有括号问题
             System.out.println("out");
         }
     }
-
+*/
     @Test
     public void testList() {
         Set<String> ww = new TreeSet<>();
@@ -161,6 +153,19 @@ todo 生成计算式还是有括号问题
     public void testCalculation() {
         CalculationFormula fraction = generateRandomCalculationFormula(10, 5);
         System.out.println(fraction);
-        System.out.println(Calculation.calculateFormula(fraction));
+        System.out.println("ans = " + Calculation.calculateFormula(fraction));
     }
+
+    @Test
+    public void testCommonDivider() {
+        System.out.println(Fraction.getCommonDivisor(4, 5));
+    }
+
+    @Test
+    public void testCompareTo() {
+
+        //todo 通过比较CF的toString来比较式子是否重复
+
+    }
+
 }

@@ -105,12 +105,12 @@ public class Generation {
 
         //优化重复括号和开头末尾括号
         //开头末尾
-        if (calculationFormula.getLBrackets()[0] > 0 &&
+/*        if (calculationFormula.getLBrackets()[0] > 0 &&
                 calculationFormula.getRBrackets()[operatorCounts] > 0) {
             int min = Math.min(calculationFormula.getLBrackets()[0], calculationFormula.getRBrackets()[operatorCounts]);
             calculationFormula.getLBrackets()[0] -= min;
             calculationFormula.getRBrackets()[operatorCounts] -= min;
-        }
+        }*/
         //循环遍历左括号，除去(((Number)) + )的情况
         for (int i = 0; i < operatorCounts; i++) {
             if (calculationFormula.getRBrackets()[i] > 0) {
@@ -141,7 +141,7 @@ public class Generation {
         }
         //9/4×6/3)+(0×0/6
         //去掉开头末尾
-//        recordSet.remove("0:" + operatorCounts);
+        recordSet.remove("0:" + operatorCounts);
         for (String temp : recordSet) {
             String[] index = temp.split(":");
             calculationFormula.getLBrackets()[Integer.parseInt(index[0])]++;
@@ -183,7 +183,7 @@ public class Generation {
         //循环生成直至分母不为0
         while ((num = generateRandomInt(upperLimit)) == 0) ;
         result.setDenominator(num);
-        return result;
+        return result.optimize();
     }
 
     /**
@@ -196,7 +196,7 @@ public class Generation {
         Fraction result = new Fraction();
         result.setNumerator(generateRandomInt(upperLimit));
         result.setDenominator(1);
-        return result;
+        return result.optimize();
     }
 
     /**
