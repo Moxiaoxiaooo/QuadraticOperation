@@ -10,7 +10,7 @@ import lombok.Setter;
  */
 @Setter
 @Getter
-public class CalculationFormula implements Comparable {
+public class CalculationFormula {
 
     /**
      * 计算符号
@@ -54,13 +54,4 @@ public class CalculationFormula implements Comparable {
     }
 
 
-    @Override
-    public int compareTo(Object o) {
-        if (o instanceof CalculationFormula) {
-            CalculationFormula temp = (CalculationFormula) o;
-
-
-        }
-        return 0;
-    }
 }

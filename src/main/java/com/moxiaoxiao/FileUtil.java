@@ -26,7 +26,7 @@ public class FileUtil {
         FileWriter formulaFileWriter = null;
         FileWriter ansFileWriter = null;
         try {
-            int i = 0;
+            int i = 1;
             formulaFileWriter = new FileWriter(formulaFilePath);
             ansFileWriter = new FileWriter(ansFilePath);
             for (FormulaAndAns temp : formulaAndAnsList) {
