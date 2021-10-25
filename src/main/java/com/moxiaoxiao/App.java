@@ -34,14 +34,13 @@ public class App {
                 a = args[i + 1];
             }
         }
-        if (n == 0 || r == 0) {
-            System.out.println("请确保参数列表正确，通过 -r [整数数值]  指定数值范围， 通过 -n [整数数值]  指定表达式个数");
-        } else if (a != null && e != null) {
+        if (a != null && e != null) {
             List<String> formulaList = FileUtil.readFileToList(e);
             List<String> ansList = FileUtil.readFileToList(a);
             String result = Calculation.countFormulaCorrectCounts(formulaList, ansList);
             FileUtil.writeStringToFile(result, "Grade.txt");
-
+        } else if (n == 0 || r == 0) {
+            System.out.println("请确保参数列表正确，通过 -r [整数数值]  指定数值范围， 通过 -n [整数数值]  指定表达式个数");
         } else {
             //写入文件
             List<FormulaAndAns> resultList = Generation.generateQuestionList(n, r, 3);
