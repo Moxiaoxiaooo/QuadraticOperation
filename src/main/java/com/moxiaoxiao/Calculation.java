@@ -211,7 +211,6 @@ public class Calculation {
         str = str.startsWith("--") ? str.substring(2) : str;
         str = str.replaceAll("--", "+");
         str = str.replaceAll("\\+-", "-");
-        System.out.println("新表达式：" + str);
         if (str.matches("-{0,1}[0-9]+([.][0-9]+){0,1}")) {//不存在运算符了，即递归结束，这里的正则为匹配所有的正负整数及小数
             return str;
         }
@@ -225,7 +224,6 @@ public class Calculation {
             int rIndex = str.indexOf(")", lIndex);
             //括号中的字表达式
             String subExpr = str.substring(lIndex + 1, rIndex);
-            System.out.println("准备括号：(" + subExpr + ")");
             newExpr = str.substring(0, lIndex) + getResult(subExpr) //调用本身，计算括号中表达式结果
                     + str.substring(rIndex + 1);
             return getResult(newExpr);
@@ -240,7 +238,6 @@ public class Calculation {
             if (m.find()) {
                 //第一个乘除表达式
                 String temp = m.group();
-                System.out.println("计算乘除：" + temp);
                 String[] a = temp.split("[*/×÷]");
                 newExpr = str.substring(0, m.start())
                         + doubleCal(Double.parseDouble(a[0]), Double.parseDouble(a[1]), temp.charAt(a[0].length()))
@@ -257,7 +254,6 @@ public class Calculation {
             if (m.find()) {
                 //第一个加减表达式
                 String temp = m.group();
-                System.out.println("计算加减：" + temp);
                 String[] a = temp.split("\\b[+-]", 2);
                 newExpr = str.substring(0, m.start())
                         + doubleCal(Double.parseDouble(a[0]), Double.parseDouble(a[1]), temp.charAt(a[0].length()))
