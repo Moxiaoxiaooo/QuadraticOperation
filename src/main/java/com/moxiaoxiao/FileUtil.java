@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,18 +60,59 @@ public class FileUtil {
     }
 
 
-    public static List<String> readFileToList(String filePath) throws IOException {
-        FileReader fileReader = new FileReader(filePath);
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
-        System.out.println(bufferedReader.readLine());
-        System.out.println(bufferedReader.readLine());
-        System.out.println(bufferedReader.readLine());
-        return null;
+    public static List<String> readFileToList(String filePath) {
+        FileReader fileReader = null;
+        BufferedReader bufferedReader = null;
+        List<String> resultList = new ArrayList<>();
+        try {
+            fileReader = new FileReader(filePath);
+            bufferedReader = new BufferedReader(fileReader);
+            String temp = "";
+            while ((temp = bufferedReader.readLine()) != null) {
+                resultList.add(temp);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fileReader != null) {
+                try {
+                    fileReader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+        return resultList;
     }
 
-    public static boolean writeListToFile(String filePath, List list) {
-
-
-        return false;
+    public static boolean writeStringToFile(String value, String filePath) {
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(filePath);
+            fileWriter.write(value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fileWriter != null) {
+                try {
+                    fileWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return true;
     }
+
 }

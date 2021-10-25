@@ -188,4 +188,10 @@ public class AppTest {
         FileUtil.writeFormulaAndAns("Exercises.txt", "Answers.txt", Generation.generateQuestionList(10000, 10, 3));
     }
 
+    @Test
+    public void testCountFormulaCorrectCounts() {
+        List<String> formulaList = FileUtil.readFileToList("Exercises.txt");
+        List<String> ansList = FileUtil.readFileToList("Answers.txt");
+        System.out.println(Calculation.countFormulaCorrectCounts(formulaList, ansList));
+    }
 }
