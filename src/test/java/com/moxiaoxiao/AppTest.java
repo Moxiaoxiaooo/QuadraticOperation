@@ -183,4 +183,9 @@ public class AppTest {
 
     }
 
+    @Test
+    public void testReadLine() throws Exception {
+        FileUtil.writeFormulaAndAns("Exercises.txt", "Answers.txt", Generation.generateQuestionList(10000, 10, 3));
+    }
+
 }

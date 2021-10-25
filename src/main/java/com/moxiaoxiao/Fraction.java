@@ -25,7 +25,23 @@ public class Fraction implements Comparable {
     @Override
     public String toString() {
         this.optimize();
-        return numerator + (denominator == 1 ? "" : ("/" + denominator));
+        //分很多种情况：分子为0  分母为 1  分子>分母 分子==分母 分子<分母
+        if (numerator == 0) {
+            return "0";
+        } else if (denominator == 1) {
+            return "" + numerator;
+        } else if (numerator == denominator) {
+            return "1";
+        } else if (numerator > denominator) {
+            return (numerator / denominator) + "'" + (numerator % denominator) + "/" + denominator;
+        } else {
+            //-667/468
+            if (Math.abs(numerator) > denominator) {
+                return "-" + ((-numerator) / denominator) + "'" + ((-numerator) % denominator) + "/" + denominator;
+            } else {
+                return numerator + "/" + denominator;
+            }
+        }
     }
 
     /**

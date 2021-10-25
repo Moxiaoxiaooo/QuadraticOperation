@@ -38,6 +38,7 @@ public class Generation {
                 } else {
                     processSet.add(process);
                 }
+
                 temp.setFormula(formula);
                 temp.setAns(ans);
             } catch (ByZeroException e) {
@@ -52,7 +53,7 @@ public class Generation {
 
 
     public static CalculationFormula generateRandomCalculationFormula(int upperLimit, int operatorCounts) {
-        //            operatorCounts = generateRandomInt(operatorCounts)+1;
+        operatorCounts = generateRandomInt(operatorCounts) + 1;
         //先生成数字
         CalculationFormula calculationFormula = new CalculationFormula();
         calculationFormula.setNumbers(new Fraction[operatorCounts + 1]);
@@ -210,11 +211,11 @@ public class Generation {
      */
     public static Fraction generateRandomFraction(int upperLimit) {
         Fraction result = new Fraction();
-        result.setNumerator(generateRandomInt(upperLimit));
         int num = 0;
         //循环生成直至分母不为0
         while ((num = generateRandomInt(upperLimit)) == 0) ;
         result.setDenominator(num);
+        result.setNumerator(generateRandomInt(upperLimit * num));
         return result.optimize();
     }
 
